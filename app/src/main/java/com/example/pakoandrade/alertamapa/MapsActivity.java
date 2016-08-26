@@ -39,8 +39,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(extra != null) {
             lat = (String) extra.get("latitud");
             lon = (String) extra.get("longitud");
-            Toast.makeText(this, "Se recibieron los valores", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, lat + lon, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Se recibieron los valores", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, lat + lon, Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this, "No se reciben valores", Toast.LENGTH_LONG).show();
         }
@@ -53,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         latD2 = Double.parseDouble(lat);
         lonD2 = Double.parseDouble(lon);
-        Toast.makeText(this, latD2.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, latD2.toString(), Toast.LENGTH_SHORT).show();
        // Toast.makeText(this, lat, Toast.LENGTH_SHORT).show();
         Log.d("Latitud", lat);
         Log.d("longitud", lon);

@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,36 +27,29 @@ import java.util.TimerTask;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity {
+public class AmberActivity extends AppCompatActivity {
+
     String idAlert = "";
     Button btAtender;
     ListView listAlert;
     String lat = "";
     String longs = "";
 
+    String lugar,contacto,age,fisico;
+    String name;
+    String vestimenta;
+
     JSONArray jsonArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_amber);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        btAtender = (Button) findViewById(R.id.btAtender);
-        listAlert = (ListView) findViewById(R.id.listAlert);
-        Button btAmbar = (Button) findViewById(R.id.btAmbar);
-
-        btAmbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,AmberActivity.class);
-                startActivity(i);
-            }
-        });
-
-
+        listAlert = (ListView) findViewById(R.id.listAmber);
 
 
 
@@ -72,28 +64,24 @@ public class MainActivity extends AppCompatActivity {
                         listAlert.getChildAt(n).setBackgroundColor(Color.TRANSPARENT);
                     }
                 }
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                i.putExtra("latitud",lat);
-                i.putExtra("longitud",longs);
-                //Toast.makeText(MainActivity.this, lat, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(AmberActivity.this, AmberDetailActivity.class);
+                i.putExtra("lugar",lugar);
+                i.putExtra("contacto",contacto);
+                i.putExtra("edad",age);
+                i.putExtra("fisico",fisico);
+                i.putExtra("nombre",name);
+                i.putExtra("vestimenta",vestimenta);
                 startActivity(i);
 
 
             }
         });
 
-        btAtender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeStatus();
-            }
-        });
-
-       // readAlert();
+        // readAlert();
         callAsynchronousTask();
 
-
     }
+
 
     public void readAlert(){
 
@@ -107,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         AsyncHttpClient client = new AsyncHttpClient();
 
-        client.get("http://wsars.cloudapp.net/wsARS.svc/NoAtendidas", new TextHttpResponseHandler() {
+        client.get("http://wsars.cloudapp.net/wsARS.svc/AlertasAmber", new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
@@ -121,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
                     for(int i = 0;i < jsonArray.length();i++){
                         JSONObject jsonObjeto = jsonArray.getJSONObject(i);
-                        String idAlerta = jsonObjeto.optString("Alerta");
+                        String idAlerta = jsonObjeto.optString("LugarAmber");
 
 
                         listAlert.setAdapter(adaptador);
@@ -143,10 +131,13 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject jsonObjeto = jsonArray.getJSONObject(i);
 
                 if (value == i) {
-                    idAlert = jsonObjeto.optString("idAlerta");
-                    lat = jsonObjeto.optString("Lat");
-                    longs =   jsonObjeto.optString("Lon");
-                   // Toast.makeText(MainActivity.this, idAlert + lat, Toast.LENGTH_SHORT).show();
+                    contacto = jsonObjeto.optString("ContactoAmber");
+                    age = jsonObjeto.optString("EdadAmber");
+                    fisico =   jsonObjeto.optString("FisicosAmber");
+                    lugar =   jsonObjeto.optString("LugarAmber");
+                    name =   jsonObjeto.optString("NombreAmber");
+                    vestimenta =   jsonObjeto.optString("VestimentaAmber");
+                    Toast.makeText(AmberActivity.this, contacto + age, Toast.LENGTH_SHORT).show();
                     //Log.d("Numero de alerta ", idAlert);
                 }
             }
@@ -169,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                Toast.makeText(MainActivity.this, "Alerta cambiada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AmberActivity.this, "Alerta cambiada", Toast.LENGTH_SHORT).show();
                 readAlert();
             }
         });
@@ -184,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                           readAlert();
+                            readAlert();
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
                         }
@@ -192,7 +183,8 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         };
-        timer.schedule(doAsynchronousTask, 0, 100000); //execute in every 50000 ms
+        timer.schedule(doAsynchronousTask, 0, 50000); //execute in every 50000 ms
     }
+
 
 }
